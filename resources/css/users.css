@@ -1,0 +1,359 @@
+.users-page {
+    display: grid;
+    gap: 16px;
+}
+
+.users-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.users-page-heading {
+    display: grid;
+    gap: 7px;
+}
+
+.users-eyebrow {
+    color: #7885c7;
+    font-weight: 750;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.users-page-heading h1 {
+    margin: 0;
+    color: #1d2940;
+    font-weight: 720;
+    letter-spacing: -0.045em;
+    line-height: 1.15;
+}
+
+.users-page-heading p {
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.6;
+}
+
+.users-add-icon {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.8;
+}
+
+.users-card {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 340px);
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.users-toolbar {
+    display: flex;
+    min-height: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 19px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.users-filters {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 9px;
+}
+
+.users-search {
+    position: relative;
+    width: min(320px, 36vw);
+}
+
+.users-search svg {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 15px;
+    height: 15px;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: #929caf;
+    stroke-linecap: round;
+    stroke-width: 1.7;
+    pointer-events: none;
+}
+
+.users-search .input {
+    padding-left: 35px;
+    appearance: none;
+}
+
+.users-filters .select {
+    width: 140px;
+}
+
+.users-total {
+    flex: 0 0 auto;
+    color: #8993a5;
+}
+
+.users-table-wrap {
+    flex: 1;
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.users-table th {
+    height: 42px;
+    padding: 0 20px;
+    background: #fafbfe;
+    color: #8a94a7;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.users-table td {
+    height: 67px;
+    padding: 10px 20px;
+    border-top: 1px solid #eef0f5;
+    color: #526078;
+}
+
+.users-table tbody tr {
+    transition: background-color 120ms ease;
+}
+
+.users-table tbody tr:hover {
+    background: #fbfcff;
+}
+
+.users-table .actions-col {
+    width: 140px;
+    text-align: right;
+}
+
+.user-identity {
+    display: flex;
+    min-width: 180px;
+    align-items: center;
+    gap: 11px;
+}
+
+.user-row-avatar {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid #e6e9fa;
+    border-radius: 10px;
+    background: #f0f2ff;
+    color: #5b69bd;
+    font-weight: 750;
+    text-transform: uppercase;
+}
+
+.user-identity-copy {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+}
+
+.user-identity-copy strong {
+    overflow: hidden;
+    color: #2b354a;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-identity-copy span {
+    overflow: hidden;
+    color: #8c96a8;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    border: 1px solid #e7eaf0;
+    border-radius: 999px;
+    background: #f8f9fb;
+    color: #667187;
+    font-weight: 650;
+    line-height: 1;
+    text-transform: capitalize;
+}
+
+.user-status::before {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #98a2b3;
+    content: "";
+}
+
+.user-status.is-active {
+    border-color: #d7eee3;
+    background: #f1faf5;
+    color: #36795b;
+}
+
+.user-status.is-active::before {
+    background: #4ea77a;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.users-empty {
+    padding: 48px 20px !important;
+    color: #7c8799 !important;
+    text-align: center;
+}
+
+.users-empty strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #344158;
+}
+
+.users-pagination {
+    display: flex;
+    min-height: 62px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 19px;
+    border-top: 1px solid var(--color-border);
+    color: #8a94a7;
+}
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.page-link {
+    display: grid;
+    min-width: 29px;
+    height: 29px;
+    place-items: center;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    color: #6f7a8e;
+    text-decoration: none;
+    transition:
+        background-color 130ms ease,
+        color 130ms ease;
+}
+
+.page-link:hover:not(.disabled):not(.active) {
+    background: #f0f2f8;
+    color: #38455e;
+}
+
+.page-link.active {
+    background: #edf0ff;
+    color: #4d5fc9;
+    font-weight: 700;
+}
+
+.page-link.disabled {
+    color: #b6bdc9;
+    pointer-events: none;
+}
+
+.users-form-card {
+    padding: 24px;
+}
+
+@media (max-width: 760px) {
+    .users-page {
+        min-height: 0;
+        gap: 18px;
+    }
+
+    .users-card {
+        min-height: 0;
+    }
+
+    .users-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 15px;
+    }
+
+    .users-filters,
+    .users-search {
+        width: 100%;
+    }
+
+    .users-filters {
+        flex-wrap: wrap;
+    }
+
+    .users-search {
+        flex: 1 1 100%;
+    }
+
+    .users-filters .select {
+        flex: 1 1 140px;
+    }
+
+    .users-table th,
+    .users-table td {
+        padding-right: 13px;
+        padding-left: 13px;
+    }
+}
+
+@media (max-width: 540px) {
+    .users-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .users-page-header .btn {
+        width: 100%;
+    }
+
+    .users-total {
+        display: none;
+    }
+
+    .users-table .actions-col {
+        width: auto;
+    }
+
+    .users-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .users-form-card {
+        padding: 18px;
+    }
+}
