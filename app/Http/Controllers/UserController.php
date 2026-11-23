@@ -2,37 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class UserController extends Controller
 {
+    /**
+     * UserController constructor.
+     */
+    public function __construct(private UserRepository $userRepository) {}
+
+    /**
+     * Display a listing of the users with optional search and status filters.
+     */
     public function index(Request $request)
     {
-        $users = User::query()
-            ->when($request->search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($request->status, fn ($query, $status) => $query->where('status', $status))
-            ->latest('id')
-            ->paginate(10)
-            ->withQueryString()
-            ->through(fn ($user) => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'status' => $user->status,
-            ]);
+        $users = $this->userRepository->getUsers($request->search, $request->status);
 
         return Inertia::render('Users/Index', [
             'users' => $users,
@@ -40,25 +28,29 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new user.
+     */
     public function create()
     {
         return Inertia::render('Users/Create');
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created user in storage.
+     */
+    public function store(StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'status' => ['required', Rule::in(['active', 'inactive'])],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        $data = $request->validated();
 
-        User::create($data); // password is hashed by the model's "hashed" cast
+        $this->userRepository->createUser($data);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
+    /**
+     * Show the form for editing the specified user.
+     */
     public function edit(User $user)
     {
         return Inertia::render('Users/Edit', [
@@ -66,20 +58,18 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, User $user)
+    /**
+     * Update the specified user in storage.
+     */
+    public function update(StoreUserRequest $request, $user)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'status' => ['required', Rule::in(['active', 'inactive'])],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        ]);
+        $data = $request->validated();
 
         if (empty($data['password'])) {
             unset($data['password']);
         }
 
-        $user->update($data);
+        $this->userRepository->updateUser($user, $data);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }

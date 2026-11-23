@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref, watch } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
@@ -9,41 +10,42 @@ const props = defineProps({
 });
 
 const page = usePage();
+
 const search = ref(props.filters.search ?? '');
 const status = ref(props.filters.status ?? '');
 
-let timer = null;
-watch([search, status], () => {
-    clearTimeout(timer);
-    timer = setTimeout(applyFilters, 300);
+// Apply filters with debounce.
+watch([search, status], ([search, status], _, onCleanup) => {
+    const timer = setTimeout(() => {
+        router.get(
+            route('users.index'),
+            {
+                search: search || undefined,
+                status: status || undefined,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            }
+        );
+    }, 300);
+
+    onCleanup(() => clearTimeout(timer));
 });
 
-function applyFilters() {
-    router.get(
-        route('users.index'),
-        { search: search.value || undefined, status: status.value || undefined },
-        { preserveState: true, replace: true },
-    );
-}
-
+// Reset filters.
 function resetFilters() {
     search.value = '';
     status.value = '';
 }
 
-function getInitials(name) {
-    return name
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase();
-}
-
+// Delete user.
 function destroyUser(user) {
     if (confirm(`Delete ${user.name}? This cannot be undone.`)) {
-        router.delete(route('users.destroy', user.id), { preserveScroll: true });
+        router.delete(route('users.destroy', user.id), {
+            preserveScroll: true,
+        });
     }
 }
 </script>
@@ -125,7 +127,7 @@ function destroyUser(user) {
                                 <td>
                                     <div class="user-identity">
                                         <span class="user-row-avatar" aria-hidden="true">
-                                            {{ getInitials(user.name) }}
+                                            {{ user.name?.charAt(0).toUpperCase() }}
                                         </span>
                                         <span class="user-identity-copy">
                                             <strong>{{ user.name }}</strong>
