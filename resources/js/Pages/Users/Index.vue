@@ -14,24 +14,20 @@ const page = usePage();
 const search = ref(props.filters.search ?? '');
 const status = ref(props.filters.status ?? '');
 
-// Apply filters with debounce.
-watch([search, status], ([search, status], _, onCleanup) => {
-    const timer = setTimeout(() => {
-        router.get(
-            route('users.index'),
-            {
-                search: search || undefined,
-                status: status || undefined,
-            },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                replace: true,
-            }
-        );
-    }, 300);
-
-    onCleanup(() => clearTimeout(timer));
+// Apply filters.
+watch([search, status], ([search, status]) => {
+    router.get(
+        route('users.index'),
+        {
+            search: search || undefined,
+            status: status || undefined,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        }
+    );
 });
 
 // Reset filters.
@@ -41,7 +37,7 @@ function resetFilters() {
 }
 
 // Delete user.
-function destroyUser(user) {
+function deleteUser(user) {
     if (confirm(`Delete ${user.name}? This cannot be undone.`)) {
         router.delete(route('users.destroy', user.id), {
             preserveScroll: true,
@@ -154,7 +150,7 @@ function destroyUser(user) {
                                         <button
                                             type="button"
                                             class="btn btn-danger btn-sm"
-                                            @click="destroyUser(user)"
+                                            @click="deleteUser(user)"
                                         >
                                             Delete
                                         </button>
