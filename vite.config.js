@@ -17,6 +17,6 @@ export default defineConfig({
                 },
             },
         }),
-        vueDevTools(),
+        ...(process.env.NODE_ENV !== 'production' ? [vueDevTools()] : []),
     ],
 });
