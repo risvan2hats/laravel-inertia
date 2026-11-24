@@ -13,23 +13,24 @@ class UserController extends Controller
     /**
      * UserController constructor.
      */
-    public function __construct(private UserRepository $userRepository) {}
+    public function __construct(protected UserRepository $userRepository) {}
 
     /**
-     * Display a listing of the users with optional search and status filters.
+     * Display users with optional filters.
      */
     public function index(Request $request)
     {
-        $users = $this->userRepository->getUsers($request->search, $request->status);
-
         return Inertia::render('Users/Index', [
-            'users' => $users,
+            'users' => $this->userRepository->getUsers(
+                $request->search,
+                $request->status
+            ),
             'filters' => $request->only('search', 'status'),
         ]);
     }
 
     /**
-     * Show the form for creating a new user.
+     * Show the user creation form.
      */
     public function create()
     {
@@ -37,19 +38,18 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created user in storage.
+     * Store a new user.
      */
     public function store(StoreUserRequest $request)
     {
-        $data = $request->validated();
+        $this->userRepository->createUser($request->validated());
 
-        $this->userRepository->createUser($data);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully.');
     }
 
     /**
-     * Show the form for editing the specified user.
+     * Show the user edit form.
      */
     public function edit(User $user)
     {
@@ -59,25 +59,24 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified user in storage.
+     * Update an existing user.
      */
-    public function update(StoreUserRequest $request, $user)
+    public function update(StoreUserRequest $request, User $user)
     {
-        $data = $request->validated();
+        $this->userRepository->updateUser($user, $request->validated());
 
-        if (empty($data['password'])) {
-            unset($data['password']);
-        }
-
-        $this->userRepository->updateUser($user, $data);
-
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully.');
     }
 
+    /**
+     * Delete a user.
+     */
     public function destroy(User $user)
     {
-        $user->delete();
+        $this->userRepository->deleteUser($user);
 
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

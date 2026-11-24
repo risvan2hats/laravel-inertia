@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,19 +24,22 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         $user = $this->route('user');
-        $emailRule = Rule::unique('users', 'email');
-        $passwordRules = ['required', 'string', 'min:8', 'confirmed'];
-
-        if ($user instanceof User) {
-            $emailRule->ignore($user->id);
-            $passwordRules = ['nullable', 'string', 'min:8', 'confirmed'];
-        }
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', $emailRule],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user),
+            ],
             'status' => ['required', Rule::in(['active', 'inactive'])],
-            'password' => $passwordRules,
+            'password' => [
+                $user ? 'nullable' : 'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ];
     }
 }

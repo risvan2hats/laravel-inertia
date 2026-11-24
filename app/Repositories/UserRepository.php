@@ -9,7 +9,10 @@ class UserRepository
     /**
      * UserRepository constructor.
      */
-    public function __construct(protected CommonFilterRepository $commonFilter, protected CommonRepository $commonRepository) {}
+    public function __construct(
+        protected CommonFilterRepository $commonFilter,
+        protected CommonRepository $commonRepository
+    ) {}
 
     /**
      * Get users with optional search and status filters.
@@ -33,11 +36,24 @@ class UserRepository
     }
 
     /**
-     * Update the specified user.
+     * Update an existing user.
      */
     public function updateUser(User $user, array $data): User
     {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
         $user->update($data);
+
         return $user;
+    }
+
+    /**
+     * Delete an existing user.
+     */
+    public function deleteUser(User $user): bool
+    {
+        return $user->delete();
     }
 }
